@@ -1,0 +1,21 @@
+# Control file for monit service
+# Tell monit to run as a foreground process
+set init
+# Tell monit to poll every 10sec when it runs as a daemon
+set daemon 10
+# Set the monit web interface
+set httpd port 2812
+    allow iamroot:scoducks read-only
+
+# Service checks
+# Backend 
+check host backend with address 127.0.0.1
+    if failed port 3600 protocol http then restart
+    start program = "/home/lunchbuddy/app/start_backend.sh"
+    stop program = "/home/lunchbuddy/app/stop_backend.sh" 
+    
+# Frontend
+check host frontend with address 127.0.0.1
+    if failed port 3000 protocol http then restart
+    start program = "/home/lunchbuddy/app/start_frontend.sh"
+    stop program = "/home/lunchbuddy/app/stop_frontend.sh" 

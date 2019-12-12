@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Submissions</title>
+    </head>
+    <body>
+        <h1>User Submissions</h1>
+        <table>
+            <tr>
+                <th>Contact</th>
+                <th>Comment</th>
+            </tr>
+            {% for submission in submissions %}
+            <tr>
+                <td>{{ submission.email }}</td>
+                <td>{{ submission.comment }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

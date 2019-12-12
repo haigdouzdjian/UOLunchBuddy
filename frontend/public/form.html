@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>UO Lunch Buddy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="img/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="img/favicon-16x16.png"
+    />
+    <link
+      rel="shortcut icon"
+      href="/favicon.ico"
+      type="image/x-icon"
+    />
+    <link href="style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1 class="page-title">UO Lunch Buddy</h1>
+    <div class="cardWrapper">
+      <form class="card" action="/" method="get">
+        <div id="contactForm" class="listStyle">
+          <div>
+            <p>Email:</p>
+            <input id="emailBox" type="text" /><br />
+          </div>
+          <div>
+            <p>Description:</p>
+            <textarea id="descriptionBox" rows="7" cols="18"></textarea>
+          </div>
+        </div>
+        <input id="submit" type="submit" value="Submit" />
+      </form>
+      <a href="/"><p>Home</p></a>
+    </div>
+  </body>
+  <script>
+    $("#submit").click(function() {
+      document.location.href = "/";
+    });
+  </script>
+</html>

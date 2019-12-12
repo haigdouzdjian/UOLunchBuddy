@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>UO Lunch Buddy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="img/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="img/favicon-16x16.png"
+    />
+    <link
+      rel="shortcut icon"
+      href="/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="manifest" href="img/site.webmanifest" />
+  </head>
+  <body>
+    <h1 class="page-title">UO Lunch Buddy</h1>
+    <div class="cardWrapper">
+      <form id="myForm" class="card" action="/cuisine-form" method="GET">
+        <div id="listStyle" class="listStyle">
+          <div id="cardContainer" class="flexDiv"></div>
+          <div class="flexDiv">
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="duckBucks" id="duckBucks"/>
+              <p>Duck Bucks</p>
+            </div>
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="mealPoints" id="mealPoints"/>
+              <p>Meal Points</p>
+            </div>
+          </div>
+          <div class="flexDiv">
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="1$" id="1$"/>
+              <p>$</p>
+            </div>
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="2$" id="2$"/>
+              <p>$$</p>
+            </div>
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="3$" id="3$"/>
+              <p>$$$</p>
+            </div>
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="4$" id="4$"/>
+              <p>$$$$</p>
+            </div>
+            <div class="inputContainer">
+              <input class="listInput" type="checkbox" name="5$" id="5$"/>
+              <p>$$$$$</p>
+            </div>
+          </div>
+        </div>
+        <input id="submit" type="submit" value="Submit" />
+      </form>
+      <a href="/form.html"><p>Did we miss something? Let us know.</p></a>
+    </div>
+  </body>
+  <script>
+    var cuisines = {};
+
+    function buildChecklist(data) {
+      for (let i = 0; i < data.length; i++) {
+        var currentCuisine = data[i];
+        var parent = document.getElementById("cardContainer");
+        var parentContainer = parent.appendChild(document.createElement("div"));
+        parentContainer.setAttribute("class", "inputContainer");
+        var cuisineBox = parentContainer.appendChild(
+          document.createElement("input")
+        );
+        cuisineBox.className = "listInput";
+        cuisineBox.name = data[i][0];
+        cuisineBox.id = data[i][0];
+        cuisineBox.type = "checkbox";
+        var cuisineName = parentContainer.appendChild(
+          document.createElement("p")
+        );
+        cuisineName.innerHTML = `${data[i][1]}`;
+      }
+    }
+
+    const getCuisines = async () => {
+      const response = await fetch("/cuisines");
+      const json = await response.json();
+      cuisines = json;
+      buildChecklist(cuisines);
+    };
+    getCuisines();
+    
+    const sendCuisineObject = async (data) => {
+      const cookie = await fetch('/cookies', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+        body: JSON.stringify(data)
+      })
+    }
+    // Get form data
+    const sendCuisineChoice = (data) => {
+      let cuisineObject = {
+        'cuisines': [],
+        'prices': [],
+      }
+      let re = /\$$/
+      for (let i = 0; i < data.length; i++) {
+        let currentInput = data[i];
+        // Price checkboxes
+        if (re.exec(currentInput.name)) {
+          if(currentInput.checked) {
+            cuisineObject.prices.push(`${currentInput.name[0]}`)
+          }
+        } else if (currentInput.name === 'duckBucks') {
+          // Duck Bucks
+          if (currentInput.checked) {
+            cuisineObject.duck_bux = true;
+          }
+        } else if (currentInput.name === 'mealPoints') {
+          // Meal Points
+          if (currentInput.checked) {
+            cuisineObject.meal_points = true;
+          }
+        } else {
+          // Cuisines
+          if (currentInput.checked) {
+            cuisineObject.cuisines.push(`${currentInput.name}`)
+          }
+        }
+      }
+      sendCuisineObject(cuisineObject)
+    }
+
+    let myForm = document.querySelector("form");
+    myForm.addEventListener("submit", function(event) {
+      //event.preventDefault();
+      // Send data here
+      sendCuisineChoice(myForm.elements)
+    });
+  </script>
+</html>
